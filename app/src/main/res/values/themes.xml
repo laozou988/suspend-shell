@@ -1,0 +1,3 @@
+<resources>
+    <style name="Theme.SuspendShell" parent="Theme.AppCompat.Light.DarkActionBar" />
+</resources>
