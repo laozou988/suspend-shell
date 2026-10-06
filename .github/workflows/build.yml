@@ -17,10 +17,8 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # 安装 Android SDK 并接受所有 license（gradle 会自动补齐 compileSdk 组件）
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
+      # 不再使用 setup-android（v3 在新 cmdline-tools 上装已废弃的 tools 包会失败），
+      # 直接使用 runner 预装 Android SDK + 已接受 license，Gradle 自动补齐 compileSdk。
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
