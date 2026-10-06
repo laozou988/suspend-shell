@@ -188,6 +188,8 @@ class OverlayService : Service() {
         val dm: DisplayMetrics = resources.displayMetrics
         val params = panelParams ?: return
         val view = panelView ?: return
+        val prevGravity = params.gravity
+        val prevY = params.y
         params.width = (dm.widthPixels * 0.92).toInt()
         params.x = 0
         params.y = 0
@@ -209,10 +211,11 @@ class OverlayService : Service() {
                 view.setBackgroundResource(R.drawable.bg_panel)
             }
             STATE_MIN -> {
-                // 仅展示顶部区块：标题栏 + 切换按钮行，内容区收起
+                // 基于③原位收起内容框：保持切换前的停靠位置，仅展示标题栏一条
                 params.height = (resources.displayMetrics.density * 52).toInt()
-                params.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                view.setBackgroundResource(R.drawable.bg_panel_bottom)
+                params.gravity = prevGravity
+                params.y = prevY
+                view.setBackgroundResource(R.drawable.bg_panel)
             }
         }
         runCatching { wm?.updateViewLayout(view, params) }
