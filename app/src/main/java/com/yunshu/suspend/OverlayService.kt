@@ -164,7 +164,7 @@ class OverlayService : Service() {
         tvPanelTitle = view.findViewById(R.id.tvPanelTitle)
         llContent = view.findViewById(R.id.llContent)
         view.findViewById<ImageView>(R.id.btnToggle).setOnClickListener { toggleState() }
-        view.findViewById<TextView>(R.id.tvPanelTitle).let { bindTitleDrag(it) }
+        view.findViewById<LinearLayout>(R.id.titleBar).let { bindTitleDrag(it) }
 
         loadContent()
     }
