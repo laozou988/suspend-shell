@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 悬浮球：圆形球体 + 体内光影渐变（中心偏上高光 → 边缘渐深，模拟球面受光） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="30dp"
+        android:centerX="0.5"
+        android:centerY="0.36"
+        android:startColor="#6FA5F6"
+        android:centerColor="#2E77DE"
+        android:endColor="#1B6EF3" />
+</shape>

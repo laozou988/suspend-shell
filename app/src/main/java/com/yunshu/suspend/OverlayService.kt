@@ -46,6 +46,7 @@ class OverlayService : Service() {
         private const val STATE_QUARTER = 0
         private const val STATE_HALF = 1
         private const val STATE_TOP = 2
+        private const val STATE_MIN = 3
 
         var isRunning = false
             private set
@@ -173,7 +174,8 @@ class OverlayService : Service() {
         when (state) {
             STATE_QUARTER -> applyState(STATE_HALF)
             STATE_HALF -> applyState(STATE_TOP)
-            STATE_TOP -> applyState(STATE_QUARTER)   // 三态循环：去掉"收起"
+            STATE_TOP -> applyState(STATE_MIN)
+            STATE_MIN -> applyState(STATE_QUARTER)
             else -> applyState(STATE_QUARTER)
         }
     }
@@ -202,6 +204,12 @@ class OverlayService : Service() {
                 params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
                 params.y = dm.heightPixels / 2   // 上边缘锚定中线不动，收起下半部分，露出屏幕底部
                 view.setBackgroundResource(R.drawable.bg_panel)
+            }
+            STATE_MIN -> {
+                // 仅展示顶部区块：标题栏 + 切换按钮行，内容区收起
+                params.height = (resources.displayMetrics.density * 52).toInt()
+                params.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                view.setBackgroundResource(R.drawable.bg_panel_bottom)
             }
         }
         runCatching { wm?.updateViewLayout(view, params) }
@@ -404,7 +412,8 @@ class OverlayService : Service() {
                 }
                 MotionEvent.ACTION_UP -> {
                     v.removeCallbacks(longRunnable)
-                    if (held && moved) applyState(STATE_QUARTER)  // 松手吸附回贴底 1/4
+                    // 未拖动（单击）→ 吸附回贴底 1/4；长按拖动过则松手停在当前位置
+                    if (!moved) applyState(STATE_QUARTER)
                     held = false
                     true
                 }

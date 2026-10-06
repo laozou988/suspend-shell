@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_capsule"
-    android:paddingLeft="22dp"
-    android:paddingTop="10dp"
-    android:paddingRight="22dp"
-    android:paddingBottom="10dp"
-    android:text="悬浮屏"
-    android:textColor="#FFFFFF"
-    android:textSize="14sp" />
+<!-- 悬浮球：圆形 + 体内光影渐变 + laptop 图标 + 极小字 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:background="@drawable/bg_ball"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingTop="7dp"
+    android:paddingBottom="5dp">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:contentDescription="悬浮屏"
+        android:src="@drawable/ic_laptop" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="悬浮屏"
+        android:textColor="#FFFFFF"
+        android:textSize="6sp" />
+</LinearLayout>
