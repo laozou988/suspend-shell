@@ -20,6 +20,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -160,7 +161,7 @@ class OverlayService : Service() {
 
         tvPanelTitle = view.findViewById(R.id.tvPanelTitle)
         llContent = view.findViewById(R.id.llContent)
-        view.findViewById<Button>(R.id.btnToggle).setOnClickListener { toggleState() }
+        view.findViewById<ImageView>(R.id.btnToggle).setOnClickListener { toggleState() }
 
         loadContent()
     }
@@ -196,7 +197,8 @@ class OverlayService : Service() {
             STATE_TOP -> {
                 params.height = dm.heightPixels / 4
                 params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                view.setBackgroundResource(R.drawable.bg_panel_top)
+                params.y = dm.heightPixels / 2   // 上边缘锚定中线不动，收起下半部分，露出屏幕底部
+                view.setBackgroundResource(R.drawable.bg_panel)
             }
         }
         runCatching { wm?.updateViewLayout(view, params) }
@@ -286,7 +288,7 @@ class OverlayService : Service() {
                 if (item.isEmpty()) continue
                 val row = inflater.inflate(R.layout.overlay_item, container, false)
                 row.findViewById<TextView>(R.id.tvItemText).text = item
-                row.findViewById<Button>(R.id.btnItemCopy).setOnClickListener { copyText(item) }
+                row.findViewById<TextView>(R.id.btnItemCopy).setOnClickListener { copyText(item) }
                 container.addView(row, rowParams)
             }
         }
