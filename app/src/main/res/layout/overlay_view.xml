@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 悬浮球：圆形 + 体内光影渐变 + laptop 图标 + 极小字 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="60dp"
-    android:layout_height="60dp"
+    android:layout_width="65dp"
+    android:layout_height="65dp"
     android:background="@drawable/bg_ball"
     android:gravity="center"
     android:orientation="vertical"
@@ -21,5 +21,5 @@
         android:layout_marginTop="1dp"
         android:text="悬浮屏"
         android:textColor="#FFFFFF"
-        android:textSize="6sp" />
+        android:textSize="9sp" />
 </LinearLayout>

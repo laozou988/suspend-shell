@@ -18,6 +18,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
@@ -64,6 +65,8 @@ class OverlayService : Service() {
     private var state = STATE_QUARTER
     private var pendingCall: Call? = null
     private val mainHandler = Handler(Looper.getMainLooper())
+    private var panelToast: TextView? = null
+    private val hideToastRunnable = Runnable { panelToast?.visibility = View.GONE }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -342,7 +345,35 @@ class OverlayService : Service() {
             btn.text = "复制"
             btn.setTextColor(0xFF1B6EF3.toInt())
         }, 1000)
-        toast("内容已复制")
+        showPanelToast("内容已复制")
+    }
+
+    // ===== 悬浮屏内自绘提示条（系统 Toast 在悬浮窗上被 ROM 吞掉，改用它）=====
+    private fun showPanelToast(msg: String) {
+        val root = panelView as? ViewGroup ?: return
+        var tv = panelToast
+        if (tv == null) {
+            tv = TextView(this)
+            tv.setTextColor(0xFFFFFFFF.toInt())
+            tv.textSize = 14f
+            tv.gravity = Gravity.CENTER
+            tv.setBackgroundColor(0xCC132A4A.toInt())
+            val d = resources.displayMetrics.density
+            val pad = (8 * d).toInt()
+            tv.setPadding(pad, pad, pad, pad)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            lp.setMargins(12, 4, 12, 4)
+            tv.layoutParams = lp
+            panelToast = tv
+        }
+        if (tv.parent == null) root.addView(tv, 1)   // 插到标题栏下方
+        tv.text = msg
+        tv.visibility = View.VISIBLE
+        tv.removeCallbacks(hideToastRunnable)
+        tv.postDelayed(hideToastRunnable, 1500)
     }
 
     // ===== 拖动（悬浮球）=====
