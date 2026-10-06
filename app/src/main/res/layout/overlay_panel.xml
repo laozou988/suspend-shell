@@ -2,80 +2,60 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_panel"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@drawable/bg_panel_bottom"
+    android:orientation="vertical">
 
+    <!-- 标题栏：左标题 + 右上角状态切换图标 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="6dp">
 
         <TextView
             android:id="@+id/tvPanelTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="生成结果"
             android:textColor="#132A4A"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btnCollapse"
+            android:id="@+id/btnToggle"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="36dp"
             android:background="@drawable/bg_btn"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp"
-            android:text="收起"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="切换"
             android:textColor="#FFFFFF"
-            android:textSize="13sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
+    <!-- 内容区：按模块分组，可上下滑动翻看 -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="2dp"
         android:layout_weight="1"
+        android:fillViewport="true"
         android:scrollbars="vertical">
 
-        <TextView
-            android:id="@+id/tvPanelBody"
+        <LinearLayout
+            android:id="@+id/llContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="5dp"
-            android:text="加载中…"
-            android:textColor="#132A4A"
-            android:textSize="15sp" />
+            android:orientation="vertical"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="14dp" />
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnCopy"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_btn"
-            android:text="复制内容"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btnRefresh"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_btn"
-            android:text="刷新"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
-    </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <TextView
+        android:id="@+id/tvItemText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:lineSpacingExtra="3dp"
+        android:textColor="#132A4A"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btnItemCopy"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/bg_btn"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:text="复制"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp" />
+</LinearLayout>
