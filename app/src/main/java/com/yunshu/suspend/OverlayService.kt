@@ -132,8 +132,10 @@ class OverlayService : Service() {
         wm?.addView(view, params)
         capsuleView = view
         bindDrag(view, params)
-        // 首次点击悬浮球 = 远程取数并弹出悬浮屏
-        view.setOnClickListener { showPanel() }
+        // 悬浮球点击：未展开=展开悬浮屏（自动取数）；已展开=收起悬浮屏（断取数）
+        view.setOnClickListener {
+            if (panelView == null) showPanel() else hidePanel()
+        }
     }
 
     // ===== 悬浮屏（贴底底部抽屉，四态循环）=====
@@ -162,6 +164,7 @@ class OverlayService : Service() {
         tvPanelTitle = view.findViewById(R.id.tvPanelTitle)
         llContent = view.findViewById(R.id.llContent)
         view.findViewById<ImageView>(R.id.btnToggle).setOnClickListener { toggleState() }
+        view.findViewById<TextView>(R.id.tvPanelTitle).let { bindTitleDrag(it) }
 
         loadContent()
     }
@@ -170,7 +173,7 @@ class OverlayService : Service() {
         when (state) {
             STATE_QUARTER -> applyState(STATE_HALF)
             STATE_HALF -> applyState(STATE_TOP)
-            STATE_TOP -> hidePanel()   // 收起 = 关屏，回到悬浮球
+            STATE_TOP -> applyState(STATE_QUARTER)   // 三态循环：去掉"收起"
             else -> applyState(STATE_QUARTER)
         }
     }
@@ -313,16 +316,25 @@ class OverlayService : Service() {
                 if (item.isEmpty()) continue
                 val row = inflater.inflate(R.layout.overlay_item, container, false)
                 row.findViewById<TextView>(R.id.tvItemText).text = item
-                row.findViewById<TextView>(R.id.btnItemCopy).setOnClickListener { copyText(item) }
+                row.findViewById<TextView>(R.id.btnItemCopy).setOnClickListener {
+                    copyText(item, it as TextView)
+                }
                 container.addView(row, rowParams)
             }
         }
     }
 
-    private fun copyText(text: String) {
+    private fun copyText(text: String, btn: TextView) {
         val cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         cm.setPrimaryClip(ClipData.newPlainText("suspend", text))
-        toast("已复制")
+        // 点击瞬间变"已复制"置灰态，短暂停留后还原
+        btn.text = "已复制"
+        btn.setTextColor(0xFF9AA0A6.toInt())
+        btn.postDelayed({
+            btn.text = "复制"
+            btn.setTextColor(0xFF1B6EF3.toInt())
+        }, 1000)
+        toast("内容已复制")
     }
 
     // ===== 拖动（悬浮球）=====
@@ -357,6 +369,43 @@ class OverlayService : Service() {
                     if (!dragging) {
                         v.performClick()
                     }
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    // ===== 长按悬浮屏顶部中区（标题文字区）：上下拖动，松手吸附回贴底 1/4 =====
+    private fun bindTitleDrag(titleView: View) {
+        val params = panelParams ?: return
+        var downY = 0
+        var downRawY = 0f
+        var held = false
+        var moved = false
+        val longRunnable = Runnable { held = true }
+        titleView.setOnTouchListener { v, ev ->
+            when (ev.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    downY = params.y
+                    downRawY = ev.rawY
+                    held = false
+                    moved = false
+                    v.postDelayed(longRunnable, 400)
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (held) {
+                        params.y = downY + (ev.rawY - downRawY).toInt()
+                        if (Math.abs(ev.rawY - downRawY) > 4) moved = true
+                        runCatching { wm?.updateViewLayout(panelView, params) }
+                    }
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    v.removeCallbacks(longRunnable)
+                    if (held && moved) applyState(STATE_QUARTER)  // 松手吸附回贴底 1/4
+                    held = false
                     true
                 }
                 else -> false

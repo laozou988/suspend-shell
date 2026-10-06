@@ -5,8 +5,9 @@
     android:background="@drawable/bg_panel_bottom"
     android:orientation="vertical">
 
-    <!-- 标题栏：左标题 + 右上角状态切换图标 -->
+    <!-- 标题栏：左标题 + 右上角状态切换图标（长按顶部中区可上下拖动） -->
     <LinearLayout
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -51,7 +52,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="14dp"
-            android:paddingRight="10dp"
+            android:paddingRight="12dp"
             android:paddingBottom="14dp" />
     </ScrollView>
 </LinearLayout>
