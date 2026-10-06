@@ -121,9 +121,10 @@ class OverlayService : Service() {
     private fun showCapsule() {
         if (capsuleView != null) return
         val view = LayoutInflater.from(this).inflate(R.layout.overlay_view, null)
+        val size = (65 * resources.displayMetrics.density).toInt()   // 窗口显式固定为正方形，保证圆形
         val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
+            size,
+            size,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
