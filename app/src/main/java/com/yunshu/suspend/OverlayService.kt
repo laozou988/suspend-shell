@@ -223,18 +223,18 @@ class OverlayService : Service() {
             try {
                 call.execute().use { resp ->
                     if (!resp.isSuccessful) {
-                        mainHandler.post { if (panelView != null && !call.isCanceled) showUnready() }
+                        mainHandler.post { if (panelView != null && !call.isCanceled()) showUnready() }
                         return@use
                     }
                     val body = resp.body?.string() ?: ""
                     val data = ContentApi.parse(body)
                     mainHandler.post {
-                        if (panelView == null || call.isCanceled) return@post
+                        if (panelView == null || call.isCanceled()) return@post
                         if (data == null) showUnready() else render(data)
                     }
                 }
             } catch (e: Exception) {
-                if (!call.isCanceled) mainHandler.post { if (panelView != null) showUnready() }
+                if (!call.isCanceled()) mainHandler.post { if (panelView != null) showUnready() }
             }
         }.start()
     }
